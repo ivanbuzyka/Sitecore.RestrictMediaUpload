@@ -44,8 +44,15 @@ namespace RestrictMediaUpload.Pipelines.UiUpload
             {
               string message = string.Format("The '{0}' file cannot be uploaded. The type '{1}' is not allowed", fileObject.FileName, fileObject.ContentType);
               Log.Warn(message, (object)typeof(CheckExtension));
-              args.UiResponseHandlerEx.FileCannotBeUploaded(StringUtil.EscapeJavascriptString(fileObject.FileName), "The file type is not allowed");
-              args.ErrorText = message;              
+              
+              //the line below does not work due to some reason
+              //args.UiResponseHandlerEx.FileCannotBeUploaded(StringUtil.EscapeJavascriptString(fileObject.FileName), "The file type is not allowed");              
+
+              //this error message is shown when advanced upload dialog is used
+              args.ErrorText = message;
+
+              //following is the workaround to show popup with the error message
+              HttpContext.Current.Response.Write(string.Format("<html><head><script type=\"text/JavaScript\" language=\"javascript\">alert('{0}');</script></head><body>Done</body></html>", message));
               args.AbortPipeline();
               break;
             }
