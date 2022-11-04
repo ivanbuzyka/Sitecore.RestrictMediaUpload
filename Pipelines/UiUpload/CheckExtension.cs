@@ -42,7 +42,7 @@ namespace RestrictMediaUpload.Pipelines.UiUpload
           {
             if (!AllowedExtensions.Contains(fileObject.ContentType, StringComparer.InvariantCultureIgnoreCase))
             {
-              string message = string.Format("The '{0}' file cannot be uploaded. The type '{1}' is not allowed", fileObject.FileName, fileObject.ContentType);
+              string message = string.Format("The \"{0}\" file cannot be uploaded. The type \"{1}\" is not allowed", fileObject.FileName, fileObject.ContentType);
               Log.Warn(message, (object)typeof(CheckExtension));
               
               //the line below does not work due to some reason
@@ -52,7 +52,7 @@ namespace RestrictMediaUpload.Pipelines.UiUpload
               args.ErrorText = message;
 
               //following is the workaround to show popup with the error message
-              HttpContext.Current.Response.Write(string.Format("<html><head><script type=\"text/JavaScript\" language=\"javascript\">alert('{0}');</script></head><body>Done</body></html>", message));
+              HttpContext.Current.Response.Write(string.Format("<html><head><script type=\"text/JavaScript\" language=\"javascript\">alert('{0}');</script></head><body>Done</body></html>", StringUtil.EscapeJavascriptString(message)));
               args.AbortPipeline();
               break;
             }
